@@ -47,11 +47,18 @@ struct MetaChip: View {
 struct RecipeCardView: View {
     let card: RecipeCard
     @EnvironmentObject private var app: AppState
+    /// Reserved height for the 2-line title + 1-line meta block so every card
+    /// in a LazyHStack rail measures identically — otherwise the rail locks
+    /// its row height from the first realized card and clips taller siblings.
+    @ScaledMetric(relativeTo: .headline) private var titleBlock = 44
+    @ScaledMetric(relativeTo: .footnote) private var metaLine = 17
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            RemoteImage(url: imageURL)
-                .aspectRatio(16 / 9, contentMode: .fill)
+            Color.clear
+                .aspectRatio(16 / 9, contentMode: .fit)
+                .overlay { RemoteImage(url: imageURL) }
+                .clipped()
                 .overlay(alignment: .topTrailing) {
                     if card.hasVideo == true {
                         Image(systemName: "play.fill")
@@ -70,11 +77,12 @@ struct RecipeCardView: View {
                     .foregroundStyle(Palette.ink)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
-                Text(card.cookingMethod ?? card.category ?? "")
+                Text(card.cookingMethod ?? card.category ?? " ")
                     .fifiFont(.footnote)
                     .foregroundStyle(Palette.inkDim)
                     .lineLimit(1)
             }
+            .frame(minHeight: titleBlock + metaLine + 2, alignment: .topLeading)
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -105,14 +113,16 @@ struct ChapterCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            RemoteImage(url: app.assetURL(chapter.coverImage))
-                .aspectRatio(16 / 9, contentMode: .fill)
+            Color.clear
+                .aspectRatio(16 / 9, contentMode: .fit)
+                .overlay { RemoteImage(url: app.assetURL(chapter.coverImage)) }
                 .clipped()
             HStack {
                 Text(chapter.name)
                     .fifiFont(.headline, weight: .bold)
                     .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
                 Spacer(minLength: 8)
                 Text("\(chapter.recipeCount)")
                     .fifiFont(.footnote, weight: .medium)
@@ -140,6 +150,7 @@ struct ChapterCardView: View {
 struct KidsCardView: View {
     let card: KidsCard
     let minutesLabel: String
+    @ScaledMetric(relativeTo: .callout) private var titleLines = 40
 
     var body: some View {
         let style = KidsGroupStyle.forGroup(card.group)
@@ -153,6 +164,7 @@ struct KidsCardView: View {
                 .foregroundStyle(KidsPalette.ink)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
+                .frame(minHeight: titleLines)
             Text(metaLine)
                 .fifiFont(.footnote, weight: .medium)
                 .foregroundStyle(KidsPalette.dim)
@@ -181,11 +193,15 @@ struct KidsCardView: View {
 /// YouTube video row card.
 struct VideoCardView: View {
     let video: VideoItem
+    @ScaledMetric(relativeTo: .subheadline) private var titleBlock = 38
+    @ScaledMetric(relativeTo: .footnote) private var metaLine = 17
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            RemoteImage(url: URL(string: "https://i.ytimg.com/vi/\(video.id)/hqdefault.jpg"))
-                .aspectRatio(16 / 9, contentMode: .fill)
+            Color.clear
+                .aspectRatio(16 / 9, contentMode: .fit)
+                .overlay { RemoteImage(url: URL(string: "https://i.ytimg.com/vi/\(video.id)/hqdefault.jpg")) }
+                .clipped()
                 .overlay {
                     Image(systemName: "play.fill")
                         .font(.system(size: 22, weight: .bold))
@@ -218,6 +234,7 @@ struct VideoCardView: View {
                         .lineLimit(1)
                 }
             }
+            .frame(minHeight: titleBlock + metaLine + 2, alignment: .topLeading)
             .padding(10)
             .frame(maxWidth: .infinity, alignment: .leading)
         }

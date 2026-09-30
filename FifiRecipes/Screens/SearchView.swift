@@ -46,6 +46,7 @@ struct SearchView: View {
             }
             .padding(.bottom, 24)
         }
+        .scrollDismissesKeyboard(.interactively)
         .searchable(text: $query, placement: .navigationBarDrawer, prompt: app.s[.searchTitle])
         .task(id: app.lang) { await loadHaystack() }
         .accessibilityElement(children: .contain)
