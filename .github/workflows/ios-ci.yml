@@ -18,6 +18,9 @@ jobs:
       - name: Select latest Xcode
         run: sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)"
 
+      # UITourTests and ScreenshotTests are manual-QA screenshot suites —
+      # they interact with system dialogs (dictation, keyboard onboarding)
+      # that don't exist on a fresh CI sim, so they run locally, not here.
       - name: Build and test
         run: >-
           xcodebuild
@@ -26,4 +29,6 @@ jobs:
           -destination 'platform=iOS Simulator,name=iPhone 17'
           -configuration Debug
           clean test
+          -only-testing:FifiRecipesTests
+          -only-testing:FifiRecipesUITests/FifiRecipesUITests
           CODE_SIGNING_ALLOWED=NO
