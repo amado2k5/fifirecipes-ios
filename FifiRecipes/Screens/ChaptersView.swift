@@ -46,19 +46,12 @@ struct ChapterDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text(title)
-                        .fifiFont(.title, weight: .heavy)
-                        .foregroundStyle(Palette.ink)
-                    Spacer()
-                    Text("\(cards.count)")
-                        .fifiFont(.callout, weight: .medium)
-                        .foregroundStyle(Palette.leafDeep)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 5)
-                        .background(Palette.leafSoft, in: Capsule())
-                }
-                .padding(.horizontal)
+                Text(title)
+                    .fifiFont(.title, weight: .heavy)
+                    .foregroundStyle(Palette.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
 
                 LazyVGrid(
                     columns: [GridItem(.adaptive(minimum: 160), spacing: 14)],
@@ -79,6 +72,16 @@ struct ChapterDetailView: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Text("\(cards.count)")
+                    .fifiFont(.callout, weight: .medium)
+                    .foregroundStyle(Palette.leafDeep)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
+                    .background(Palette.leafSoft, in: Capsule())
+            }
+        }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("chapterDetail")
     }

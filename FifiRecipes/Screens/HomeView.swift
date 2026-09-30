@@ -33,7 +33,7 @@ struct HomeView: View {
                         .clipped()
                     LinearGradient(
                         colors: [.clear, Palette.ink.opacity(0.75)],
-                        startPoint: .init(x: 0.5, y: 0.35), endPoint: .bottom)
+                        startPoint: .init(x: 0.5, y: 0.25), endPoint: .bottom)
                     VStack(alignment: .leading, spacing: 8) {
                         Text(app.s[.tagline])
                             .fifiFont(.footnote, weight: .medium)
@@ -83,7 +83,11 @@ struct RailView: View {
                     .foregroundStyle(Palette.ink)
                     .padding(.horizontal)
                 ScrollView(.horizontal) {
-                    LazyHStack(spacing: 14) {
+                    // HStack (not LazyHStack): lazy rows lock their height from
+                    // the first realized card and clip taller siblings (Nastaliq,
+                    // 2-line titles). Rails hold a bounded item count, so eager
+                    // measurement is cheap and correct.
+                    HStack(alignment: .top, spacing: 14) {
                         ForEach(row.items, id: \.self) { id in
                             railItem(id)
                         }
