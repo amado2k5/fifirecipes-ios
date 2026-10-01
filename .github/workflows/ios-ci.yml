@@ -31,4 +31,11 @@ jobs:
           clean test
           -only-testing:FifiRecipesTests
           -only-testing:FifiRecipesUITests/FifiRecipesUITests
+          -resultBundlePath test-results.xcresult
           CODE_SIGNING_ALLOWED=NO
+
+      # Raw job logs and artifacts aren't always reachable, so surface the
+      # failing test names and messages as annotations on the run.
+      - name: Annotate failing tests
+        if: failure()
+        run: python3 scripts/ci-annotate-failures.py test-results.xcresult
