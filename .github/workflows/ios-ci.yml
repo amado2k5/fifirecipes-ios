@@ -31,4 +31,19 @@ jobs:
           clean test
           -only-testing:FifiRecipesTests
           -only-testing:FifiRecipesUITests/FifiRecipesUITests
+          -resultBundlePath TestResults.xcresult
           CODE_SIGNING_ALLOWED=NO
+
+      # The log only names a failing test; the result bundle has the failing
+      # assertion, its file and line, and screenshots of the simulator.
+      - name: Show test failures
+        if: failure()
+        run: xcrun xcresulttool get test-results summary --path TestResults.xcresult --compact | python3 -c 'import json,sys; [print(f["testIdentifierString"], "-", f["failureText"]) for f in json.load(sys.stdin).get("testFailures", [])]' || true
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: TestResults
+          path: TestResults.xcresult
+          retention-days: 7
