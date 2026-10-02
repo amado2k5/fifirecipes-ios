@@ -1,5 +1,18 @@
 # FiFi Recipes — iOS
 
+> [!WARNING]
+> **This repository is being archived.** Its app code now lives in the
+> universal iPhone + iPad app,
+> [fifirecipes-ipadosapp](https://github.com/amado2k5/fifirecipes-ipadosapp)
+> (bundle ID `cooking.fifi.ipados`), which ships the same iPhone tab-bar
+> layout alongside the iPad sidebar from one binary. All fixes and features
+> merged here (image loading, ingredient layout, translations, Telugu, CI
+> annotations) are already in that repo, and its CI tests the iPhone layout
+> on an iPhone 17 simulator. Open new issues and pull requests there.
+> The `iosapp.fifi.cooking` site goes offline with this repo; support and
+> privacy pages are at
+> [ipadosapp.fifi.cooking](https://ipadosapp.fifi.cooking).
+
 Native SwiftUI iPhone companion to [fifi.cooking](https://fifi.cooking), the
 recipe site by Dr. Fatma / FiFi. Not a WebView wrapper: every screen is real
 SwiftUI consuming the static JSON API at `https://fifi.cooking/data/` — the
